@@ -32,8 +32,12 @@ fi
 temp_dir=$(mktemp -d)
 tar -xzvf "$backup_file" -C "$temp_dir"
 
+# Delete the volume folder
+rm -rf "$volume_folder/_data"
+
 # Move the contents of the temporary directory to the volume folder, replacing existing files
-cp -r "$temp_dir/." "/var/lib/docker/volumes/"
+backupname=$(basename "$backup_file" | sed 's/\(.*\)_backup_.*\.tar\.gz/\1/')
+cp -rf "$temp_dir/$backupname/_data" "$volume_folder/_data"
 
 # Clean up the temporary directory
 rm -r "$temp_dir"
